@@ -125,7 +125,26 @@ def stepTracer(startState, state, stepMap):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import Queue 
+    queue = Queue()
+    visited = set()
+    stepMap = {}
+    startState = problem.getStartState()
+    queue.push(startState)
+    while not queue.isEmpty():
+        fullState = queue.pop()
+        if fullState == startState: 
+            state = fullState
+        else:
+            state = fullState[0]
+        visited.add(state)
+        if problem.isGoalState(state):
+            return stepTracer(startState, fullState, stepMap)
+        for successor in problem.getSuccessors(state):
+            if successor[0] not in visited:
+                queue.push(successor)
+                stepMap[successor] = fullState 
+    return False 
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
