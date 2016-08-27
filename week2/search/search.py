@@ -109,6 +109,8 @@ def depthFirstSearch(problem):
     return False 
     
 def stepTracer(startState, state, stepMap):
+    if startState == state:
+        return []
     solution = []
     currentState = state
     while currentState != None:
@@ -149,7 +151,28 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import PriorityQueue
+    queue = PriorityQueue()
+    startState = problem.getStartState()
+    stepMap = {}
+    visited = set()
+    queue.update(startState, 0)
+    from game import Directions
+    while not queue.isEmpty():
+        fullState = queue.pop()
+        if fullState == startState:
+            state = fullState
+        else:
+            state = fullState[0]
+        visited.add(state)
+        if problem.isGoalState(state):
+            return stepTracer(startState, fullState, stepMap)
+        for successor in problem.getSuccessors(state):
+            if successor[0] not in visited:
+                stepMap[successor] = fullState
+                queue.update(successor, problem.getCostOfActions(stepTracer(startState, fullState, stepMap)))
+    return False
+
 
 def nullHeuristic(state, problem=None):
     """
